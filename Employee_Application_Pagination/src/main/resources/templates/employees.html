@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Employees</title>
+
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+</head>
+<body>
+
+	<br></br>
+
+	<div class="container">
+		<div class="card">
+			<div class="card-header">
+				<h2 class="text-center">Employees</h2>
+				<a th:href="@{/register}" class="btn btn-primary">Add Employee</a>
+			</div>
+
+
+			<div class="card-body">
+				<table class="table table-striped">
+
+
+
+					<div class="row">
+
+						<form th:action="@{/employees}" method="GET">
+
+							<div class="col-auto">
+
+								<select class="form-select form-select-sm"
+									aria-lebel=".form-select-sm example" name="sortBy">
+
+									<option selected>Sort by names</option>
+									<option value="employeename"
+										th:selected="${sortBy == 'employeename'}">EmployeeName</option>
+									<option value="salary" th:selected="${sortBy == 'salary'}">Salary</option>
+									<option value="category" th:selected="${sortBy == 'category'}">Category</option>
+									<option value="gender" th:selected="${sortBy == 'gender'}">Gender</option>
+
+								</select>
+							</div>
+
+
+							<div class="col-auto">
+							<button class="btn btn-secondary btn-sm" type="submit">Apply</button>
+							</div>
+						</form>
+					</div>
+
+					<thead>
+						<tr>
+							<th>Employee name</th>
+							<th>Salary</th>
+							<th>Category</th>
+							<th>Gender</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr th:each="employee : ${employeePage}">
+
+							<td th:text="*{employee.employeename}"></td>
+							<td th:text="*{employee.salary}"></td>
+							<td th:text="*{employee.category}"></td>
+							<td th:text="*{employee.gender}"></td>
+							<td>
+								<a th:href="@{/updateEmployee/{id}(id = ${employee.id})}"
+								class="btn btn-success">Edit</a> 
+								
+								<a th:href="@{/deleteEmployee/{id}(id = ${employee.id})}"
+								class="btn btn-danger">Delete</a>
+							</td>
+						</tr>
+					</tbody>
+
+
+				</table>
+
+				<ul class="pagination">
+
+					<li class="page-item" th:if="${employeePage.hasPrevious()}"><a
+						class="page-link"
+						th:href="@{|/employees?pageNo=${employeePage.getNumber() - 1}&pageSize=${employeePage.getSize()}&sortBy=${sortBy}|}">Previous</a>
+					</li>
+
+					<span
+						th:each=" i : ${#numbers.sequence(0, employeePage.getTotalPages() - 1)}">
+						<li class="page-item" th:if="${i != employeePage.getNumber()}">
+							<a class="page-link"
+							th:href="@{|/employees?pageNo=${i}&pageSize=${employeePage.getSize()}&sortBy=${sortBy}|}"
+							th:text="${i + 1}"></a>
+					</li>
+
+						<li class="page-item active"
+						th:if="${i == employeePage.getNumber()}"><a class="page-link"
+							th:href="@{|/employees?pageNo=${i}&pageSize=${employeePage.getSize()}&sortBy=${sortBy}|}"
+							th:text="${i + 1}"></a></li>
+
+					</span>
+
+
+					<li class="page-item" th:if="${employeePage.hasNext()}"><a
+						class="page-link"
+						th:href="@{|/employees?pageNo=${employeePage.getNumber() + 1}&pageSize=${employeePage.getSize()}&sortBy=${sortBy}|}">Next</a>
+					</li>
+
+
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
